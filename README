@@ -1,0 +1,7 @@
+bundle install
+
+rake db:migrate
+
+rspec spec/service_spec.rb
+
+ruby service.rb -p 3000
