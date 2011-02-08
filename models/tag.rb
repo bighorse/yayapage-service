@@ -2,6 +2,7 @@ require 'rubygems'
 require 'typhoeus'
 require 'json'
 require 'logger'
+require 'rexml/document'
 
 class Tag
   include ActiveModel::Serializers::JSON
@@ -36,8 +37,24 @@ class Tag
     end  
     hydra.queue(flickr_request)
 
+    picasa_request = Typhoeus::Request.new(
+      "http://picasaweb.google.com/data/feed/api/user/maguangjun?kind=tag")
+
+    picasa_request.on_complete do |response|
+      if response.code == 200
+        doc = REXML::Document.new(response.body)
+        titles = REXML::XPath.match(doc, "//entry//title").map {|x| x.text}
+        titles.each { |title| tags << new(title)}
+      elsif response.code == 404
+        nil
+      else
+        raise response.body
+      end
+    end  
+    hydra.queue(picasa_request)
+    
     hydra.run
 #    logger.info("model/tag:#{tags}")
-    tags
+    tags.uniq!
   end
 end

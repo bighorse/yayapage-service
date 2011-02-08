@@ -10,5 +10,5 @@ gem 'json', '=1.4.6'
 gem 'typhoeus', '=0.2.0'
 
 # testing
-gem 'rspec', '=2.2.0'
+gem 'rspec', '>=2.3.0'
 gem 'rack-test', '=0.5.6'

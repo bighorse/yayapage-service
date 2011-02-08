@@ -1,11 +1,4 @@
-require File.dirname(__FILE__) + '/../service'
-gem 'rspec', '=2.2.0'
-require 'rspec'
-gem 'rack-test', '=0.5.6'
-require 'rack/test'
-
-set :environment, :test
-#Test::Unit::TestCase.send :include, Rack::Test::Methods
+require File.dirname(__FILE__) + '/spec_helper'
 
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
