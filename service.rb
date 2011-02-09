@@ -9,7 +9,8 @@ require "#{File.dirname(__FILE__)}/models/user"
 logger = Logger.new("log.txt")
 env_arg = ARGV.index("-e")
 env_argv = ARGV[env_arg+1] if env_arg
-env = env_argv || ENV["SINATRA_ENV"] || "development"
+env = env_argv || ENV["RACK_ENV"] || "development"
+logger.info("#{env}")
 databases = YAML.load_file("config/database.yml")
 ActiveRecord::Base.establish_connection(databases[env])
 
@@ -19,7 +20,7 @@ ActiveRecord::Base.establish_connection(databases[env])
 get '/api/v1/tag_list/users/:name' do
   user = User.find_by_name(params[:name])
   if user
- #   logger.info("service:#{user.tags.to_json}")
+    #logger.info("service:#{user.tags.to_json}")
     user.tags.to_json
   else
     error 404, "user not found".to_json

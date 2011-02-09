@@ -1,3 +1,5 @@
+# export RACK_RNV=test before migrating to test db
+
 require 'rubygems'
 gem 'activerecord', "=3.0.3"
 require 'active_record'
@@ -8,7 +10,7 @@ require 'sqlite3'
 
 desc "Load the environment"
 task :environment do
-  env = ENV["SINATRA_ENV"] || "development"
+  env = ENV["RACK_ENV"] || "development"
   databases = YAML.load_file("config/database.yml")
   ActiveRecord::Base.establish_connection(databases[env])
 end

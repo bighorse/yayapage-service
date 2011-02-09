@@ -54,7 +54,7 @@ class Tag
     hydra.queue(picasa_request)
     
     hydra.run
-#    logger.info("model/tag:#{tags}")
-    tags.uniq!
+    #logger.info("model/tag:#{tags}")
+    tags.uniq {|tag| tag.name}
   end
 end

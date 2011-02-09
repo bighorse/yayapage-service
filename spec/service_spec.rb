@@ -28,6 +28,7 @@ describe "service" do
       attributes = JSON.parse(last_response.body)
       attributes.size.should_not == 0
       attributes[0]["tag"]["name"].should == "beach"
+      attributes.count {|x| x["tag"]["name"] == "beach"}.should == 1
     end
 
     it "should return a 404 for a user that doesn't exist" do
