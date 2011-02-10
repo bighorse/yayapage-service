@@ -13,7 +13,7 @@ require "#{File.dirname(__FILE__)}/models/user"
 # logger.info("#{env}")
 # databases = YAML.load_file("config/database.yml")
 # ActiveRecord::Base.establish_connection(databases[env])
-configure :production do
+configure do
   # Configure stuff here you'll want to
   # only be run at Heroku at boot
 
@@ -21,6 +21,8 @@ configure :production do
   #       from ENV['DATABASE_URI'] (see /env route below)
   databases = YAML.load_file("config/database.yml")
   ActiveRecord::Base.establish_connection(databases[ENV["RACK_ENV"]])
+  logger = Logger.new("log.txt")
+  logger.info("#{ENV["RACK_ENV"]}")
 end
 # the HTTP entry points to our service
 get '/env' do
