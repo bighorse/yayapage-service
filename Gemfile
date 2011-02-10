@@ -7,7 +7,7 @@ gem 'json', '=1.4.6'
 gem 'typhoeus', '=0.2.0'
 
 group :development, :test do
-  gem 'sqlite3', "=0.1.1"
+  gem 'sqlite3-ruby', :require => 'sqlite3'
 end
 
 group :test do
