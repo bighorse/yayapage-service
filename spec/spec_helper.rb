@@ -5,3 +5,4 @@ require 'rack/test'
 
 # set test environment
 #set :environment, :test
+#ENV['RACK_ENV'] = 'test'
