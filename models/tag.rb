@@ -18,7 +18,7 @@ class Tag
   end
   
   def self.find_by_user(user)
-    logger = Logger.new("log.txt")
+    #logger = Logger.new("log.txt")
     hydra = Typhoeus::Hydra.new
     tags  = []
  
