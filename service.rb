@@ -19,6 +19,8 @@ configure :production do
 
   # TIP:  You can get you database information
   #       from ENV['DATABASE_URI'] (see /env route below)
+  databases = YAML.load_file("config/database.yml")
+  ActiveRecord::Base.establish_connection(databases[ENV["RACK_ENV"]])
 end
 # the HTTP entry points to our service
 get '/env' do
