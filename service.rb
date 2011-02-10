@@ -6,13 +6,13 @@ require 'logger'
 require "#{File.dirname(__FILE__)}/models/user"
 
 # setting up our environment
-logger = Logger.new("log.txt")
-env_arg = ARGV.index("-e")
-env_argv = ARGV[env_arg+1] if env_arg
-env = env_argv || ENV["RACK_ENV"] || "development"
-logger.info("#{env}")
-databases = YAML.load_file("config/database.yml")
-ActiveRecord::Base.establish_connection(databases[env])
+# logger = Logger.new("log.txt")
+# env_arg = ARGV.index("-e")
+# env_argv = ARGV[env_arg+1] if env_arg
+# env = env_argv || ENV["RACK_ENV"] || "development"
+# logger.info("#{env}")
+# databases = YAML.load_file("config/database.yml")
+# ActiveRecord::Base.establish_connection(databases[env])
 configure :production do
   # Configure stuff here you'll want to
   # only be run at Heroku at boot
