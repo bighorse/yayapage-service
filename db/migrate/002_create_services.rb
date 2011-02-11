@@ -2,15 +2,13 @@ class CreateServices < ActiveRecord::Migration
   def self.up
     create_table :services do |t|
       t.string :name
-      t.string :email
-      t.string :password
-      t.string :bio
+      t.string :type
 
       t.timestamps
     end
   end
 
   def self.down
-    drop_table :users
+    drop_table :services
   end
 end

@@ -4,6 +4,7 @@ require 'active_record'
 require 'sinatra'
 require 'logger'
 require "#{File.dirname(__FILE__)}/models/user"
+require "#{File.dirname(__FILE__)}/models/tag"
 
 # setting up our environment
 # logger = Logger.new("log.txt")
@@ -19,8 +20,8 @@ configure do
 
   # TIP:  You can get you database information
   #       from ENV['DATABASE_URI'] (see /env route below)
-  #databases = YAML.load_file("config/database.yml")
-  #ActiveRecord::Base.establish_connection(databases[ENV["RACK_ENV"]])
+  databases = YAML.load_file("config/database.yml")
+  ActiveRecord::Base.establish_connection(databases[ENV["RACK_ENV"]])
   #logger = Logger.new("log.txt")
   #logger.info("#{ENV["RACK_ENV"]}")
 end
@@ -34,7 +35,8 @@ get '/api/v1/tag_list/users/:name' do
   user = User.find_by_name(params[:name])
   if user
     #logger.info("service:#{user.tags.to_json}")
-    user.tags.to_json
+    #user.tags.to_json
+    Tag.find_by_user(user).to_json
   else
     error 404, "user not found".to_json
   end
