@@ -3,6 +3,7 @@ class CreateUserServiceRelationships < ActiveRecord::Migration
     create_table :user_service_relationships do |t|
       t.integer :user_id
       t.integer :service_id
+      t.string :service_userid
 
       t.timestamps
     end

@@ -4,27 +4,13 @@ require 'active_record'
 require 'sinatra'
 require 'logger'
 require "#{File.dirname(__FILE__)}/models/user"
-require "#{File.dirname(__FILE__)}/models/tag"
 
 # setting up our environment
-# logger = Logger.new("log.txt")
-# env_arg = ARGV.index("-e")
-# env_argv = ARGV[env_arg+1] if env_arg
-# env = env_argv || ENV["RACK_ENV"] || "development"
-# logger.info("#{env}")
-# databases = YAML.load_file("config/database.yml")
-# ActiveRecord::Base.establish_connection(databases[env])
 configure do
-  # Configure stuff here you'll want to
-  # only be run at Heroku at boot
-
-  # TIP:  You can get you database information
-  #       from ENV['DATABASE_URI'] (see /env route below)
   databases = YAML.load_file("config/database.yml")
   ActiveRecord::Base.establish_connection(databases[ENV["RACK_ENV"]])
-  #logger = Logger.new("log.txt")
-  #logger.info("#{ENV["RACK_ENV"]}")
 end
+
 # the HTTP entry points to our service
 get '/env' do
   ENV.inspect
@@ -34,9 +20,15 @@ end
 get '/api/v1/tag_list/users/:name' do
   user = User.find_by_name(params[:name])
   if user
-    #logger.info("service:#{user.tags.to_json}")
-    #user.tags.to_json
-    Tag.find_by_user(user).to_json
+    #logger = Logger.new("log.txt")
+    hydra = Typhoeus::Hydra.new
+    all_tags  = []
+    user.regist_services.each do |regist_service| 
+      regist_service.get_tags(hydra) { |tags| all_tags << tags}
+    end    
+    hydra.run
+    all_tags.uniq! {|tag| tag.name}
+    all_tags.to_json
   else
     error 404, "user not found".to_json
   end
