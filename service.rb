@@ -4,6 +4,9 @@ require 'active_record'
 require 'sinatra'
 require 'logger'
 require "#{File.dirname(__FILE__)}/models/user"
+require "#{File.dirname(__FILE__)}/models/tag"
+require "#{File.dirname(__FILE__)}/models/service"
+require "#{File.dirname(__FILE__)}/models/user_service_relationship"
 
 # setting up our environment
 configure do
