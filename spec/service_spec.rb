@@ -26,8 +26,8 @@ describe "service" do
       fs = FlickrService.create(:api_key => "f0de31f98fe2a16cbd81959d5144e525")
       ps = PicasaService.create()
       
-      user.user_service_relationships.create(:service_id => fs.id)
-      user.user_service_relationships.create(:service_id => ps.id)
+      user.user_service_relationships.create(:service => fs, :service_userid => "29435289@N00")
+      user.user_service_relationships.create(:service => ps, :service_userid => "maguangjun")
     end
 
     it "should return tag list of the user" do

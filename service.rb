@@ -23,13 +23,13 @@ end
 get '/api/v1/tag_list/users/:name' do
   user = User.find_by_name(params[:name])
   if user
-    #logger = Logger.new("log.txt")
     hydra = Typhoeus::Hydra.new
     all_tags  = []
     user.regist_services.each do |regist_service| 
-      regist_service.get_tags(hydra) { |tags| all_tags << tags}
+      regist_service.get_tags(hydra, user) { |tags| all_tags += tags}
     end    
     hydra.run
+    #Logger.new("log.txt").info("#{all_tags}")
     all_tags.uniq! {|tag| tag.name}
     all_tags.to_json
   else

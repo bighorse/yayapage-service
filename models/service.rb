@@ -6,16 +6,17 @@ require 'rexml/document'
 
 class Service < ActiveRecord::Base
   has_many :user_service_relationships
-  has_many :users, :through => :user_service_relationships, :source => :User
+  has_many :users, :through => :user_service_relationships, :source => :user
   
 end
 
 class FlickrService < Service
-  def get_tags(hydra, &block)
+  def get_tags(hydra, user, &block)
+    user_service = user.user_service_relationships.find_by_service_id(self)
     tags = []
     
     request = Typhoeus::Request.new(
-      "http://api.flickr.com/services/rest/?method=flickr.tags.getListUser&api_key=f0de31f98fe2a16cbd81959d5144e525&user_id=29435289@N00&per_page=9999&format=json&nojsoncallback=1")
+      "http://api.flickr.com/services/rest/?method=flickr.tags.getListUser&api_key=#{self.api_key}&user_id=#{user_service.service_userid}&per_page=9999&format=json&nojsoncallback=1")
 
     request.on_complete do |response|
       if response.code == 200
@@ -34,11 +35,12 @@ class FlickrService < Service
 end
 
 class PicasaService < Service
-  def get_tags(hydra, &block)
+  def get_tags(hydra, user, &block)
+    user_service = user.user_service_relationships.find_by_service_id(self)
     tags = []
     
     request = Typhoeus::Request.new(
-      "http://picasaweb.google.com/data/feed/api/user/maguangjun?kind=tag")
+      "http://picasaweb.google.com/data/feed/api/user/#{user_service.service_userid}?kind=tag")
 
     request.on_complete do |response|
       if response.code == 200

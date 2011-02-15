@@ -1,4 +1,4 @@
 class UserServiceRelationship < ActiveRecord::Base
-  belongs_to :User
-  belongs_to :Service
+  belongs_to :user
+  belongs_to :service
 end
