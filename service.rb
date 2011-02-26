@@ -10,6 +10,9 @@ require "#{File.dirname(__FILE__)}/models/user_service_relationship"
 
 # setting up our environment
 configure do
+  require 'dalli'
+  $memcache = Dalli::Client.new('localhost:11211')
+
   databases = YAML.load_file("config/database.yml")
   ActiveRecord::Base.establish_connection(databases[ENV["RACK_ENV"]])
 end
@@ -21,20 +24,22 @@ end
 
 # get tag list by user
 get '/api/v1/tag_list/users/:name' do
-  user = User.find_by_name(params[:name])
-  if user
-    hydra = Typhoeus::Hydra.new
-    all_tags  = []
-    user.regist_services.each do |regist_service| 
-      regist_service.get_tags(hydra, user) { |tags| all_tags += tags}
-    end    
-    hydra.run
-    #Logger.new("log.txt").info("#{all_tags}")
-    all_tags.uniq! {|tag| tag.name}
-    all_tags.to_json
-  else
-    error 404, "user not found".to_json
-  end
+    $memcache.fetch("User:#{params[:name]}:taglist", 10.seconds) do
+      user = User.find_by_name(params[:name])
+      if user
+        hydra = Typhoeus::Hydra.new
+        all_tags  = []
+        user.regist_services.each do |regist_service| 
+          regist_service.get_tags(hydra, user) { |tags| all_tags += tags}
+        end    
+        hydra.run
+        Logger.new("log.txt").info("#{params[:name]}")
+        all_tags.uniq! {|tag| tag.name}
+        all_tags.to_json
+      else
+        error 404, "user not found".to_json
+      end
+    end
 end
 
 # get a user by name

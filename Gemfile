@@ -5,6 +5,7 @@ gem 'sinatra', "=1.1.0"
 
 gem 'json', '=1.4.6'
 gem 'typhoeus', '=0.2.0'
+gem 'dalli'
 
 group :development, :test do
   gem 'sqlite3-ruby', :require => 'sqlite3'
