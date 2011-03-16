@@ -3,10 +3,11 @@ require 'bundler/setup'
 require 'active_record'
 require 'sinatra'
 require 'logger'
+require 'typhoeus'
 require "#{File.dirname(__FILE__)}/models/user"
 require "#{File.dirname(__FILE__)}/models/tag"
+require "#{File.dirname(__FILE__)}/models/regist_service"
 require "#{File.dirname(__FILE__)}/models/service"
-require "#{File.dirname(__FILE__)}/models/user_service_relationship"
 
 # setting up our environment
 configure do
@@ -30,10 +31,12 @@ get '/api/v1/tag_list/users/:name' do
         hydra = Typhoeus::Hydra.new
         all_tags  = []
         user.regist_services.each do |regist_service| 
-          regist_service.get_tags(hydra, user) { |tags| all_tags += tags}
+          puts "regist_service = #{regist_service.inspect}"
+          service = Service.new(hydra, regist_service.type, regist_service.service_userid)
+          service.get_tags { |tags| all_tags += tags}
         end    
         hydra.run
-        Logger.new("log.txt").info("#{params[:name]}")
+        #Logger.new("log.txt").info("#{params[:name]}")
         all_tags.uniq! {|tag| tag.name}
         all_tags.to_json
       else

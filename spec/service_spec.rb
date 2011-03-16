@@ -11,8 +11,7 @@ end
 describe "service" do
   before(:each) do
     User.delete_all
-    Service.delete_all
-    UserServiceRelationship.delete_all
+    RegistService.delete_all
   end
 
   describe "GET on /api/v1/tag_list/users/:id" do
@@ -23,11 +22,11 @@ describe "service" do
         :password => "strongpass",
         :bio => "rubyist")
         
-      fs = FlickrService.create(:api_key => "f0de31f98fe2a16cbd81959d5144e525")
-      ps = PicasaService.create()
+      #fs = Service.create(:type => "flickr")
+      #ps = Service.create(:type => "picasa")
       
-      user.user_service_relationships.create(:service => fs, :service_userid => "29435289@N00")
-      user.user_service_relationships.create(:service => ps, :service_userid => "maguangjun")
+      user.regist_services.create(:type => "flickr", :service_userid => "29435289@N00")
+      #user.user_service_relationships.create(:service => ps, :service_userid => "maguangjun")
     end
 
     it "should return tag list of the user" do
